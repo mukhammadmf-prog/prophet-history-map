@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>История жизни Пророка ﷺ</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101827;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px;background:#17243a;text-align:center}
+h1{font-size:23px;color:#e6c77a;margin:5px}
+p{color:#cbd5e1}
+#map{height:55vh;width:100%}
+.content{padding:16px}
+.card{background:#1e2d45;padding:15px;margin:12px 0;border-radius:12px}
+button{background:#c49b4a;color:#111;border:0;padding:12px;border-radius:8px;font-weight:bold}
+button:active{opacity:.7}
+.small{color:#e6c77a;font-size:13px}
+.leaflet-popup-content{color:#17243a}
+</style>
+</head>
+<body>
+<header>
+<div class="small">ИСТОРИЧЕСКАЯ КАРТА</div>
+<h1>Путь Пророка Мухаммада ﷺ</h1>
+<p>Жизнь, события и священные города</p>
+</header>
+
+<div id="map"></div>
+
+<div class="content">
+<h2>Хронология событий</h2>
+<div id="events"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const places=[
+{
+name:"Мекка",
+year:"Около 570 г.",
+title:"Рождение Пророка ﷺ",
+desc:"Согласно традиционной биографии, Пророк Мухаммад ﷺ родился в Мекке."
+,lat:21.4225,lon:39.8262
+},
+{
+name:"Пещера Хира",
+year:"610 г.",
+title:"Начало откровения",
+desc:"Здесь Пророк ﷺ получил первые откровения Корана."
+,lat:21.4575,lon:39.8590
+},
+{
+name:"Медина",
+year:"622 г.",
+title:"Переселение (Хиджра)",
+desc:"Переселение мусульман из Мекки в Ясриб, позднее известный как Медина."
+,lat:24.4672,lon:39.6111
+},
+{
+name:"Бадр",
+year:"624 г.",
+title:"Сражение при Бадре",
+desc:"Важное событие ранней истории мусульманской общины."
+,lat:23.7800,lon:38.7900
+},
+{
+name:"Ухуд",
+year:"625 г.",
+title:"События у горы Ухуд",
+desc:"Одно из значимых событий истории Медины."
+,lat:24.5010,lon:39.6150
+},
+{
+name:"Худайбия",
+year:"628 г.",
+title:"Договор Худайбии",
+desc:"Заключение важного соглашения между мусульманами и курайшитами."
+,lat:21.7830,lon:39.6500
+},
+{
+name:"Мекка",
+year:"630 г.",
+title:"Открытие Мекки",
+desc:"Мусульмане вошли в Мекку."
+,lat:21.4225,lon:39.8262
+},
+{
+name:"Медина",
+year:"632 г.",
+title:"Последние дни",
+desc:"Пророк Мухаммад ﷺ скончался в Медине."
+,lat:24.4672,lon:39.6111
+}
+];
+
+const map=L.map('map').setView([23.5,40],6);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+attribution:'© OpenStreetMap'
+}).addTo(map);
+
+const points=[];
+
+places.forEach((p,i)=>{
+const marker=L.marker([p.lat,p.lon]).addTo(map);
+marker.bindPopup(
+'<b>'+p.name+'</b><br>'+p.year+
+'<br><b>'+p.title+'</b><br>'+p.desc
+);
+points.push([p.lat,p.lon]);
+
+const card=document.createElement('div');
+card.className='card';
+card.innerHTML=
+'<div class="small">'+p.year+'</div>'+
+'<h3>'+p.title+'</h3>'+
+'<p>'+p.name+'</p>'+
+'<p>'+p.desc+'</p>'+
+'<button>Показать на карте</button>';
+
+card.querySelector('button').onclick=()=>{
+map.setView([p.lat,p.lon],10);
+marker.openPopup();
+window.scrollTo({top:0,behavior:'smooth'});
+};
+document.getElementById('events').appendChild(card);
+});
+
+L.polyline(points,{color:'#d6ad59',weight:3,dashArray:'7 8'}).addTo(map);
+</script>
+</body>
+</html>
