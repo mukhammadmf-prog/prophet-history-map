@@ -1,134 +1,363 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>История жизни Пророка ﷺ</title>
+<meta name="theme-color" content="#101827">
+<title>Путь Пророка Мухаммада ﷺ</title>
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#101827;color:#fff;font-family:Arial,sans-serif}
-header{padding:20px;background:#17243a;text-align:center}
-h1{font-size:23px;color:#e6c77a;margin:5px}
-p{color:#cbd5e1}
-#map{height:55vh;width:100%}
-.content{padding:16px}
-.card{background:#1e2d45;padding:15px;margin:12px 0;border-radius:12px}
-button{background:#c49b4a;color:#111;border:0;padding:12px;border-radius:8px;font-weight:bold}
-button:active{opacity:.7}
-.small{color:#e6c77a;font-size:13px}
-.leaflet-popup-content{color:#17243a}
+:root {
+  --bg: #0b1220;
+  --panel: #17243a;
+  --card: #1c2b43;
+  --gold: #e6c77a;
+  --text: #f8fafc;
+  --muted: #b8c4d6;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 38px 20px 32px;
+  text-align: center;
+  background: linear-gradient(145deg, #1b2b45, #101827);
+  border-bottom: 1px solid #34445d;
+}
+
+.eyebrow {
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 3px;
+  margin-bottom: 14px;
+}
+
+h1 {
+  color: var(--gold);
+  font-size: clamp(26px, 6vw, 42px);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.arabic {
+  color: var(--gold);
+  font-size: 28px;
+  margin: 15px 0;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 540px;
+  margin: 12px auto 0;
+}
+
+.intro {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 22px 18px;
+  text-align: center;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.section-title {
+  padding: 24px 18px 12px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.section-title h2 {
+  color: var(--gold);
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+
+.section-title p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+#map {
+  width: 100%;
+  height: 55vh;
+  min-height: 340px;
+  border-top: 1px solid #34445d;
+  border-bottom: 1px solid #34445d;
+}
+
+.content {
+  max-width: 1100px;
+  margin: auto;
+  padding: 10px 16px 40px;
+}
+
+.events {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: linear-gradient(145deg, #1c2b43, #152238);
+  border: 1px solid #34445d;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform .2s, border-color .2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold);
+}
+
+.year {
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.card h3 {
+  font-size: 20px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.place {
+  color: #d5deeb;
+  font-size: 14px;
+}
+
+.card p {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+button {
+  background: var(--gold);
+  color: #101827;
+  border: 0;
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+button:active { opacity: .75; }
+
+footer {
+  text-align: center;
+  padding: 25px 16px;
+  color: var(--muted);
+  border-top: 1px solid #34445d;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.leaflet-popup-content {
+  color: #17243a;
+  line-height: 1.6;
+}
+
+.leaflet-popup-content b {
+  color: #17243a;
+}
+
+@media (max-width: 480px) {
+  header { padding: 30px 16px 25px; }
+  #map { height: 52vh; min-height: 300px; }
+  .content { padding: 8px 12px 30px; }
+}
 </style>
 </head>
+
 <body>
+
 <header>
-<div class="small">ИСТОРИЧЕСКАЯ КАРТА</div>
-<h1>Путь Пророка Мухаммада ﷺ</h1>
-<p>Жизнь, события и священные города</p>
+  <div class="eyebrow">ИСТОРИЧЕСКАЯ КАРТА</div>
+  <h1>Путь Пророка Мухаммада ﷺ</h1>
+  <div class="arabic">ﷺ</div>
+  <p class="subtitle">Жизнь, события и священные города</p>
 </header>
+
+<div class="intro">
+  Изучайте важные события жизни Пророка ﷺ через карту и хронологию.
+  Нажмите на маркер или кнопку события, чтобы увидеть его расположение.
+</div>
+
+<section class="section-title">
+  <h2>Интерактивная карта</h2>
+  <p>Мекка, Медина и места важных исторических событий</p>
+</section>
 
 <div id="map"></div>
 
-<div class="content">
-<h2>Хронология событий</h2>
-<div id="events"></div>
-</div>
+<section class="section-title">
+  <h2>Хронология событий</h2>
+  <p>Основные события в исторической последовательности</p>
+</section>
+
+<main class="content">
+  <div class="events" id="events"></div>
+</main>
+
+<footer>
+  Историко-образовательный проект<br>
+  Карта © OpenStreetMap · Leaflet
+</footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const places=[
-{
-name:"Мекка",
-year:"Около 570 г.",
-title:"Рождение Пророка ﷺ",
-desc:"Согласно традиционной биографии, Пророк Мухаммад ﷺ родился в Мекке."
-,lat:21.4225,lon:39.8262
-},
-{
-name:"Пещера Хира",
-year:"610 г.",
-title:"Начало откровения",
-desc:"Здесь Пророк ﷺ получил первые откровения Корана."
-,lat:21.4575,lon:39.8590
-},
-{
-name:"Медина",
-year:"622 г.",
-title:"Переселение (Хиджра)",
-desc:"Переселение мусульман из Мекки в Ясриб, позднее известный как Медина."
-,lat:24.4672,lon:39.6111
-},
-{
-name:"Бадр",
-year:"624 г.",
-title:"Сражение при Бадре",
-desc:"Важное событие ранней истории мусульманской общины."
-,lat:23.7800,lon:38.7900
-},
-{
-name:"Ухуд",
-year:"625 г.",
-title:"События у горы Ухуд",
-desc:"Одно из значимых событий истории Медины."
-,lat:24.5010,lon:39.6150
-},
-{
-name:"Худайбия",
-year:"628 г.",
-title:"Договор Худайбии",
-desc:"Заключение важного соглашения между мусульманами и курайшитами."
-,lat:21.7830,lon:39.6500
-},
-{
-name:"Мекка",
-year:"630 г.",
-title:"Открытие Мекки",
-desc:"Мусульмане вошли в Мекку."
-,lat:21.4225,lon:39.8262
-},
-{
-name:"Медина",
-year:"632 г.",
-title:"Последние дни",
-desc:"Пророк Мухаммад ﷺ скончался в Медине."
-,lat:24.4672,lon:39.6111
-}
+const places = [
+  {
+    name: "Мекка",
+    year: "Около 570 г.",
+    title: "Рождение Пророка ﷺ",
+    desc: "Согласно традиционной биографии, Пророк Мухаммад ﷺ родился в Мекке.",
+    lat: 21.4225,
+    lon: 39.8262
+  },
+  {
+    name: "Пещера Хира",
+    year: "610 г.",
+    title: "Начало откровения",
+    desc: "Согласно исламской традиции, здесь Пророк ﷺ получил первые откровения Корана.",
+    lat: 21.4575,
+    lon: 39.8590
+  },
+  {
+    name: "Медина",
+    year: "622 г.",
+    title: "Переселение (Хиджра)",
+    desc: "Переселение мусульман из Мекки в Ясриб, позднее известный как Медина.",
+    lat: 24.4672,
+    lon: 39.6111
+  },
+  {
+    name: "Бадр",
+    year: "624 г.",
+    title: "Событие при Бадре",
+    desc: "Одно из важных событий ранней истории мусульманской общины.",
+    lat: 23.7800,
+    lon: 38.7900
+  },
+  {
+    name: "Ухуд",
+    year: "625 г.",
+    title: "События у горы Ухуд",
+    desc: "Значимое событие ранней истории мусульманской общины в окрестностях Медины.",
+    lat: 24.5010,
+    lon: 39.6150
+  },
+  {
+    name: "Худайбия",
+    year: "628 г.",
+    title: "Договор Худайбии",
+    desc: "Заключение важного соглашения между мусульманами и курайшитами.",
+    lat: 21.7830,
+    lon: 39.6500
+  },
+  {
+    name: "Мекка",
+    year: "630 г.",
+    title: "Открытие Мекки",
+    desc: "Мусульмане вошли в Мекку. Это событие стало важной вехой в истории ислама.",
+    lat: 21.4225,
+    lon: 39.8262
+  },
+  {
+    name: "Медина",
+    year: "632 г.",
+    title: "Последние дни",
+    desc: "Пророк Мухаммад ﷺ скончался в Медине.",
+    lat: 24.4672,
+    lon: 39.6111
+  }
 ];
 
-const map=L.map('map').setView([23.5,40],6);
+const map = L.map("map").setView([23.5, 40], 6);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-attribution:'© OpenStreetMap'
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: "© OpenStreetMap"
 }).addTo(map);
 
-const points=[];
+const points = [];
+const events = document.getElementById("events");
 
-places.forEach((p,i)=>{
-const marker=L.marker([p.lat,p.lon]).addTo(map);
-marker.bindPopup(
-'<b>'+p.name+'</b><br>'+p.year+
-'<br><b>'+p.title+'</b><br>'+p.desc
-);
-points.push([p.lat,p.lon]);
+places.forEach((place) => {
+  const marker = L.marker([place.lat, place.lon]).addTo(map);
 
-const card=document.createElement('div');
-card.className='card';
-card.innerHTML=
-'<div class="small">'+p.year+'</div>'+
-'<h3>'+p.title+'</h3>'+
-'<p>'+p.name+'</p>'+
-'<p>'+p.desc+'</p>'+
-'<button>Показать на карте</button>';
+  marker.bindPopup(
+    "<b>" + place.name + "</b><br>" +
+    place.year + "<br>" +
+    "<b>" + place.title + "</b><br>" +
+    place.desc
+  );
 
-card.querySelector('button').onclick=()=>{
-map.setView([p.lat,p.lon],10);
-marker.openPopup();
-window.scrollTo({top:0,behavior:'smooth'});
-};
-document.getElementById('events').appendChild(card);
+  points.push([place.lat, place.lon]);
+
+  const card = document.createElement("article");
+  card.className = "card";
+
+  const year = document.createElement("div");
+  year.className = "year";
+  year.textContent = place.year;
+
+  const title = document.createElement("h3");
+  title.textContent = place.title;
+
+  const location = document.createElement("div");
+  location.className = "place";
+  location.textContent = "📍 " + place.name;
+
+  const description = document.createElement("p");
+  description.textContent = place.desc;
+
+  const button = document.createElement("button");
+  button.textContent = "Показать на карте";
+
+  button.addEventListener("click", () => {
+    map.setView([place.lat, place.lon], 10);
+    marker.openPopup();
+    document.getElementById("map").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  });
+
+  card.append(year, title, location, description, button);
+  events.appendChild(card);
 });
 
-L.polyline(points,{color:'#d6ad59',weight:3,dashArray:'7 8'}).addTo(map);
+L.polyline(points, {
+  color: "#e6c77a",
+  weight: 3,
+  dashArray: "7 8",
+  opacity: 0.8
+}).addTo(map);
 </script>
+
 </body>
 </html>
