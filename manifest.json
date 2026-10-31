@@ -1,0 +1,9 @@
+{
+  "name": "Путь Пророка Мухаммада",
+  "short_name": "Путь Пророка",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#101827",
+  "theme_color": "#17243a",
+  "description": "Историческая карта жизни Пророка Мухаммада ﷺ"
+}
