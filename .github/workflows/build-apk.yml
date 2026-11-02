@@ -16,9 +16,15 @@ jobs:
         with:
           node-version: 20
 
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
       - name: Build APK
         run: |
-          bubblewrap init --manifest https://mukhammadmf-prog.github.io/prophet-history-map/manifest.json
+          bubblewrap init --manifest https://mukhammadmf-prog.github.io/prophet-history-map/manifest.json --skipPwaValidation
